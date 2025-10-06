@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Missing Remote 🎃</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary-color: #ff7f50;
+        --background-color: #121212;
+        --container-background: #1e1e1e;
+    }
+
+    body {
+        background-color: var(--background-color);
+        background-image: 
+            radial-gradient(circle at 20% 80%, rgba(255, 127, 80, 0.1), transparent 30%),
+            radial-gradient(circle at 80% 30%, rgba(75, 0, 130, 0.1), transparent 30%);
+        color: #e0e0e0;
+        font-family: 'Merriweather', serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 1rem; 
+        box-sizing: border-box;
+    }
+
+    .game-container {
+        background-color: var(--container-background);
+        border: 2px solid var(--primary-color);
+        border-radius: 15px;
+        padding: clamp(1rem, 5vw, 2.5rem);
+        width: 100%;
+        max-width: 800px;
+        box-shadow: 0 0 25px rgba(255, 127, 80, 0.3);
+        text-align: center;
+    }
+
+    h1 {
+        font-family: 'Creepster', cursive;
+        color: var(--primary-color);
+        font-size: clamp(1.8rem, 8vw, 3rem);
+        letter-spacing: 2px;
+        margin-bottom: 1.5rem;
+    }
+
+    #game-output {
+        min-height: 150px;
+        text-align: left;
+        line-height: 1.4;
+        margin-bottom: 1.5rem;
+        font-size: clamp(1rem, 2.5vw, 1.1rem);
+        white-space: pre-wrap;
+    }
+
+    #game-output h2 {
+        font-family: 'Creepster', cursive;
+        color: #ff9f7a; 
+        font-size: clamp(1.5rem, 6vw, 2rem);
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    #game-output ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    #game-output li {
+        margin-bottom: 0.1rem; /* compact spacing */
+        display: flex;
+        align-items: center;
+    }
+
+    .suspect-emoji {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+
+    .appended-text {
+        margin-top: 1.5em;
+        padding-top: 1em;
+        border-top: 1px dashed #444;
+        font-weight: bold;
+    }
+
+    #status-display {
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+
+    #status-display p { margin: 0.5rem 0; }
+    #status-display ul { padding-left: 20px; margin-top: 5px; }
+
+    #choices-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        min-height: 50px;
+    }
+
+    button {
+        background-color: var(--primary-color);
+        color: var(--background-color);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-family: 'Merriweather', serif;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    button:hover:not(:disabled) {
+        background-color: #ff9f7a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    button:disabled {
+        background-color: #555;
+        color: #888;
+        cursor: not-allowed;
+    }
+</style>
+</head>
+<body>
+
+<div class="game-container">
+    <header>
+        <h1>The Candidate and the Missing Remote 👻</h1>
+    </header>
+    
+    <div id="game-output"></div>
+    <div id="status-display"></div>
+    <div id="choices-container"></div>
+</div>
+
+<script>
+const gameOutput = document.getElementById('game-output');
+const statusDisplay = document.getElementById('status-display');
+const choicesContainer = document.getElementById('choices-container');
+
+const ACTIONS_PER_GAME = 3;
+const INVESTIGATABLE_LOCATIONS = ["The Sofa Cushions", "The Bookshelf", "The Kitchen", "The Pile of Leaves"];
+
+const SUSPECT_DESCRIPTIONS = { 
+    "Fluffy": "The Shadowy Mystic - Aloof, dramatic, and very serious. Acts like a witch's familiar.", 
+    "Toast": "The Pumpkin-Spiced Cat - Anxious, jumpy, and easily startled by *everything*.", 
+    "Jax": "The Goofy Hellhound - Energetic, chaotic, and always trying to 'help' in the messiest way possible.", 
+    "Baldr": "The Wise Old Wolfhound - Ancient, tired, and profoundly unimpressed by everything.", 
+    "The Candidate": "The Forgetful Detective - That's YOU! Use your detective skills to solve the case." 
+};
+
+const SUSPECT_IMAGES = {
+    "Fluffy": "./images/fluffy.jpg",
+    "Toast": "./images/toast.jpg",
+    "Jax": "./images/jax.jpg",
+    "Baldr": "./images/baldr.jpg"
+};
+
+const SCENARIOS = [
+    { "culprit": "Jax", "guilty_reveal": "You accuse Jax! He brings the remote from the laundry basket.", "innocent_reveal": "Jax is innocent! He brings a sock instead.", "clues": { "locations": { "The Sofa Cushions": "A muddy paw print.", "The Bookshelf": "Nothing here.", "The Kitchen": "Very clean.", "The Pile of Leaves": "Half-chewed toy found." }, "interrogations": { "Fluffy": "Meows cryptically.", "Toast": "Saw something suspicious.", "Baldr": "Annoyed sigh.", "Jax": "Excitedly brings a smelly sock." } } },
+    { "culprit": "Fluffy", "guilty_reveal": "Fluffy admits her guilt and hides the remote behind a book.", "innocent_reveal": "Fluffy is innocent, just pushes the remote off the edge.", "clues": { "locations": { "The Sofa Cushions": "Single black cat hair.", "The Bookshelf": "Book slightly out of place.", "The Kitchen": "Half-empty saucer of milk.", "The Pile of Leaves": "Undisturbed." }, "interrogations": { "Toast": "Startled, climbs curtains.", "Jax": "Sniffed around bookshelf.", "Baldr": "Notices book out of place.", "Fluffy": "Poker face." } } },
+    { "culprit": "The Candidate", "guilty_reveal": "The remote was in the fridge. It was you all along!", "innocent_reveal": "You realize the real culprit is you!", "clues": { "locations": { "The Sofa Cushions": "Your wallet.", "The Bookshelf": "Everything in order.", "The Kitchen": "Empty Tayto packet.", "The Pile of Leaves": "Nothing here." }, "interrogations": { "Jax": "Sniffs fridge.", "Fluffy": "Stares knowingly.", "Toast": "Mentions cold draft.", "Baldr": "Grumbles at fridge." } } },
+    { "culprit": "Baldr", "guilty_reveal": "Baldr lazily shifts, revealing the remote under him.", "innocent_reveal": "Baldr is innocent, nothing new.", "clues": { "locations": { "The Sofa Cushions": "Huge indent.", "The Bookshelf": "Untouched.", "The Kitchen": "Full dinner bowl.", "The Pile of Leaves": "Undisturbed." }, "interrogations": { "Jax": "Grumble.", "Fluffy": "Points to dog bed.", "Toast": "Scrambling noise.", "Baldr": "Refuses to move." } } },
+    { "culprit": "Toast", "guilty_reveal": "Toast knocked the remote off the curtain rail.", "innocent_reveal": "Toast scared but not guilty.", "clues": { "locations": { "The Sofa Cushions": "Scratch marks.", "The Bookshelf": "Tiny claw marks.", "The Kitchen": "Nothing unusual.", "The Pile of Leaves": "Leaves slightly scattered." }, "interrogations": { "Fluffy": "Points to curtains.", "Jax": "Whines.", "Baldr": "Briefly disturbed.", "Toast": "Stares intently at wall." } } }
+];
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+let isTyping = false;
+
+async function typeWriter(element, text, delay = 25) {
+    for (const char of text) {
+        element.innerHTML += char;
+        await sleep(delay);
+    }
+}
+
+async function displayText(text, { append = false } = {}) {
+    if (isTyping) return;
+    isTyping = true;
+    disableButtons(true);
+
+    let targetElement = gameOutput;
+    if (append) {
+        const p = document.createElement('p');
+        p.className = 'appended-text';
+        gameOutput.appendChild(p);
+        targetElement = p;
+    } else {
+        gameOutput.innerHTML = '';
+    }
+    
+    await typeWriter(targetElement, text);
+    isTyping = false;
+    disableButtons(false);
+}
+
+function disableButtons(disabled) { 
+    choicesContainer.querySelectorAll('button').forEach(btn => btn.disabled = disabled); 
+}
+
+class Game {
+    constructor(scenarios) { 
+        this.scenarios = scenarios; 
+        this.currentScenario = null; 
+        this.actionsLeft = ACTIONS_PER_GAME; 
+        this.suspects = ["Fluffy", "Toast", "Jax", "Baldr", "The Candidate"]; 
+        this.cluesFound = []; 
+        this.isGameOver = false; 
+    }
+    
+    async startGame() { 
+        this.currentScenario = this.scenarios[Math.floor(Math.random() * this.scenarios.length)]; 
+        this.actionsLeft = ACTIONS_PER_GAME; 
+        this.cluesFound = []; 
+        this.isGameOver = false; 
+        const introText = `It's ${new Date().toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' })} on a dark and stormy Wednesday... After a gruelling day, you've collapsed on the sofa. But the remote is GONE! A disaster of the highest order.`; 
+        
+        await displayText(introText);
+        
+        let suspectsHTML = '<h2>Your Suspects:</h2><ul>';
+        for (const [name, description] of Object.entries(SUSPECT_DESCRIPTIONS)) {
+            let content = '';
+            if (name === "The Candidate") {
+                content = `<span class="suspect-emoji" style="font-size:30px;">🕵️</span>`;
+            } else {
+                const imgPath = SUSPECT_IMAGES[name] || 'images/placeholder.png';
+                content = `<img src="${imgPath}" alt="${name}" class="suspect-emoji">`;
+            }
+            suspectsHTML += `<li>${content}<div><strong>${name}:</strong> ${description}</div></li>`;
+        }
+        suspectsHTML += '</ul>';
+        gameOutput.innerHTML += suspectsHTML;
+        
+        await this.updateStatus(); 
+    }
+
+    async updateStatus() {
+        if (this.isGameOver) return; 
+        let cluesHTML = this.cluesFound.length > 0 ? '<ul>' + this.cluesFound.map(clue => `<li>${clue}</li>`).join('') + '</ul>' : '<p>No clues gathered yet.</p>'; 
+        statusDisplay.innerHTML = `<p><strong>Actions Left:</strong> ${this.actionsLeft}</p><p><strong>Clues Found:</strong></p>${cluesHTML}`; 
+        
+        if (this.actionsLeft <= 0) { 
+            await sleep(1500);
+            await this.showAccusationOptions("You're out of time! You must make a final accusation."); 
+            return; 
+        } 
+        
+        choicesContainer.innerHTML = `<button id="investigate-btn">Investigate a Location</button><button id="interrogate-btn">Interrogate a Suspect</button><button id="accuse-btn">Make an Accusation</button>`; 
+        document.getElementById('investigate-btn').onclick = () => this.showLocationOptions(); 
+        document.getElementById('interrogate-btn').onclick = () => this.showInterrogationOptions(); 
+        document.getElementById('accuse-btn').onclick = () => this.showAccusationOptions("The tension is thick. It's time to point the finger."); 
+    }
+
+    async handleAction(message, actionFn) { 
+        if (isTyping) return; 
+        this.actionsLeft--; 
+        await displayText(message);
+        actionFn(); 
+        await this.updateStatus();
+    }
+
+    showLocationOptions() { 
+        if (isTyping) return; 
+        choicesContainer.innerHTML = ''; 
+        INVESTIGATABLE_LOCATIONS.forEach(location => { 
+            const btn = document.createElement('button'); 
+            btn.innerText = location; 
+            btn.onclick = () => this.selectLocation(location); 
+            choicesContainer.appendChild(btn); 
+        }); 
+    }
+
+    async selectLocation(location) { 
+        const clue = this.currentScenario.clues.locations[location]; 
+        let message; 
+        let useAction = true; 
+        if (this.cluesFound.includes(clue)) { 
+            message = `You search ${location} again, but find nothing new.`; 
+            useAction = false; 
+        } else { 
+            message = `Searching ${location}...\n\nCLUE FOUND: ${clue}`; 
+            this.cluesFound.push(clue); 
+        } 
+        await this.handleAction(message, () => { if (!useAction) this.actionsLeft++; }); 
+    }
+
+    showInterrogationOptions() { 
+        if (isTyping) return; 
+        const interrogationOptions = this.suspects.filter(s => s !== "The Candidate"); 
+        choicesContainer.innerHTML = ''; 
+        interrogationOptions.forEach(suspect => { 
+            const btn = document.createElement('button'); 
+            btn.innerText = `Question ${suspect}`; 
+            btn.onclick = () => this.selectInterrogation(suspect); 
+            choicesContainer.appendChild(btn); 
+        }); 
+    }
+
+    async selectInterrogation(suspect) { 
+        const clue = this.currentScenario.clues.interrogations[suspect]; 
+        let message; 
+        let useAction = true; 
+        if (this.cluesFound.includes(clue)) { 
+            message = `${suspect} doesn't have anything new to add.`; 
+            useAction = false; 
+        } else { 
+            message = `You question ${suspect}...\n\nTESTIMONY: ${clue}`; 
+            this.cluesFound.push(clue); 
+        } 
+        await this.handleAction(message, () => { if (!useAction) this.actionsLeft++; }); 
+    }
+
+    async showAccusationOptions(promptText) { 
+        if (isTyping) return; 
+        await displayText(promptText, { append: true }); 
+        choicesContainer.innerHTML = ''; 
+        this.suspects.forEach(suspect => { 
+            const btn = document.createElement('button'); 
+            btn.innerText = `Accuse ${suspect}`; 
+            btn.onclick = () => this.makeAccusation(suspect); 
+            choicesContainer.appendChild(btn); 
+        }); 
+    }
+
+    async makeAccusation(guess) { 
+        if (isTyping) return; 
+        this.isGameOver = true; 
+        const isCorrect = (guess === this.currentScenario.culprit); 
+        let finalMessage = isCorrect ? `You accuse ${guess}... You solved the case!\n\n${this.currentScenario.guilty_reveal}` : `You accuse ${guess}... but they are innocent!\n\n${this.currentScenario.innocent_reveal}`; 
+        finalMessage += "\n\nDon't forget to vote!"; 
+        await displayText(finalMessage);
+        choicesContainer.innerHTML = ''; 
+        const playAgainBtn = document.createElement('button'); 
+        playAgainBtn.innerText = 'Play Again? 🎃'; 
+        playAgainBtn.onclick = () => window.location.reload(); 
+        choicesContainer.appendChild(playAgainBtn); 
+    }
+}
+
+const game = new Game(SCENARIOS);
+game.startGame();
+</script>
+
+</body>
+</html>

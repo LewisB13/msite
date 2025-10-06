@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micaiah's Spooky Campaign</title>
+    
+    <style>
+        /* Universal Styles */
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #0d0d0d;
+            color: #ff8c00;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Creepster', cursive;
+            color: #ff6600;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: normal;
+        }
+
+        /* Header */
+        .spooky-header {
+            background-color: #1a1a1a;
+            padding: 40px 0;
+            border-bottom: 2px solid #ff8c00;
+        }
+
+        .spooky-header h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        .slogan {
+            text-align: center;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+
+        /* Sections */
+        .section-container {
+            padding: 40px 0;
+            background-color: #262626;
+            margin-top: 20px;
+        }
+
+        /* Images */
+        .profile-photo {
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            border: 3px solid #ff8c00;
+            max-width: 50%;
+            height: auto;
+        }
+
+        /* Lists */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .goal-list li, .endorsement-list li, .event-list li {
+            padding-left: 1.5em;
+            position: relative;
+        }
+
+        .goal-list li::before, .endorsement-list li::before, .event-list li::before {
+            content: "👻";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.2em;
+        }
+
+        .spooky-message {
+            font-style: italic;
+            text-align: center;
+            font-size: 1.1em;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border: 1px dashed #ff8c00;
+        }
+.game-link-container {
+    display: flex;
+    align-items: center; /* vertically align images and button */
+    justify-content: center; /* center them horizontally */
+    flex-wrap: wrap; /* optional: wrap to next line on small screens */
+    gap: 15px; /* add space between images and button */
+    margin: 30px 0;
+}
+
+.game-link {
+    background-color: #ff6600;
+    color: #1a1a1a;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+        /* Footer */
+        .spooky-footer {
+            background-color: #000000;
+            color: #ff8c00;
+            text-align: center;
+            padding: 20px 0;
+            border-top: 2px solid #ff8c00;
+            margin-top: 20px;
+        }
+        
+        /* Specific Closing Message */
+        .final-message {
+            font-size: 1.2em;
+            font-style: italic;
+            text-align: center;
+            padding: 20px 0;
+            color: #ff8c00;
+        }
+
+        /* Placeholder for Stick Figure Drawing */
+        .stick-figure-drawing {
+            width: 100px;
+            height: 200px;
+            background-color: transparent;
+            border: 2px solid #ff6600;
+            margin: 0 auto;
+            display: block;
+            border-radius: 50% 50% 0 0 / 10% 10% 0 0;
+            border-bottom: none;
+            position: relative;
+        }
+
+        .stick-figure-drawing::before {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 100px;
+            background-color: transparent;
+            border: 2px solid #ff6600;
+            position: absolute;
+            top: 100px;
+            left: 25px;
+            border-radius: 0 0 50% 50%;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="spooky-header">
+        <div class="container">
+            <!-- <div class="stick-figure-drawing"></div> -->
+            <h1>Vote for Micaiah 🎃</h1>
+            <p class="slogan"> My husky and cats would vote for me if they were enrolled</p>
+        </div>
+    </header>
+
+    <section id="about" class="section-container">
+        <div class="container">
+            <h2>The Serious Stuff</h2>
+            <img src="./images/1000003225.png" alt="Micaich's Spooky Photo" class="profile-photo">
+            <p>Hi! I'm Micaiah and I'd really like to be a part of the student council. I'm doing art and design and want to go on to work in textiles. I've run many charity events in the past; I raised over £1500 for The Hope Foundation in Calcutta by selling chocolate, I fundraised and organised to make handbags filled with necessities and small gifts for homeless women in Ireland,worked closely with the NCBI and Vision Ireland to raise awareness for sight loss and blindness and have made jellyfish and octopods for premature babies in many hospitals across Ireland and the United Kingdom.</p>
+            <p> One of the main issues I'm concerned with in this election is the lack of facilities for students to use outside of class. We have no microwaves or kettles available to use in the student hub, our options are to buy food or bring cold options from home with no way of heating or making our own food (or starve but I really hope no one's been put in that position). I'm sure you know that money is tight for everyone, especially us students, we need options that won't break the bank and make us fall into the trap of spending over £20 a week on food we can't afford. </p>
+            <p> I'd also like the student body and NWRC in genral to get more involved with the community. I think we should try and set up events with local businesses and charities that benefit them and the college. I also think it would be a good idea for the student council to get involved with the actual council. Students and young people make up a large percentage of the area and with the right student council, we can make sure that everyones voices are heard, not just in the college. </p>
+        </div>
+    </section>
+
+    <section id="events" class="section-container">
+        <div class="container">
+            <h2>Events I'd Like To Organise</h2>
+            <ul class="event-list">
+                <li> A craft fair to showcase the talented artists and creatives in our schcool. It would be a great networking experience, we could invite local businesses and hold a raffle giving part of the proceeds to a charity NWRC would like to help</li>
+                <li> Concerts that the music and other students alike could take part in, given all the talent in NWRC. Again we could sell tickets and give part of the proceeds to charity, with the rest going to participants and to fund other college events.</li>
+                <li> A themed dance or ball. After talking to many of the students (and some staff) there seems to be a lot of intrest in a themed formal event that we would sell tickets for and have prizes for diffrent categories in the theme and just in general having a great time.</li>
+                <li> A crow party. Students bring items and trinkets to trade with one another. This event is to support going green, consuming less of what we don't need, being more sustainable by swapping and trading rather that buying new and reducing the waste we all create. </li>
+                
+            </ul>
+        </div>
+    </section>
+
+<section id="game-link-section" class="section-container">
+  <div class="container">
+    <!-- removed the ./ from the class name -->
+    <div class="game-link-container">
+      <img src="./images/jax.jpg" width="20%" height="auto">
+      <img src="./images/toast.jpg" width="20%" height="auto">
+      <img src="./images/baldr.jpg" width="20%" height="auto">
+      <img src="./images/fluffy.jpg" width="20%" height="auto">
+      <a href="game.html" class="game-link">
+        Play a silly halloween game about my pets stealing the remote, can you figure out who it was?
+      </a>
+    </div>
+  </div>
+</section>
+
+    <section id="endorsements" class="section-container">
+        <div class="container">
+            <h2>Endorsements (The Coven)</h2>
+            <ul class="endorsement-list">
+                <li>"An excellent choice for the council, she has a good head on her shoulders and will get things done". - Brian Harte, Councillor, Derry and Strabane District Council</li>
+                <li>"A hardworking and capable girl, keeps going until the job is done and remembers to cross the t's. A pleasure to work with". - Rosalean White, Coordinator, The Hope Foundation.</li>
+                <li> "Doesn't scream when I scratch and lets me sleep on her head". - Toast, The Cat.</li>
+                <li> "Pays the cheese tax, gives good pets". - Baldr, The Husky.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="closing" class="section-container">
+        <div class="container">
+            <p class="spooky-message"> Remember! Voting opens Wednesday 8th October at 9am and closes Monday 11th October at 7pm! You can vote in person or online!</p>
+        </div>
+    </section>
+
+    <div class="final-message">
+        <p>Even if you don't vote for me, please do make sure to vote and good luck to all the candidates :)</p>
+    </div>
+
+    <footer class="spooky-footer">
+        <div class="container">
+            <p>&copy; 2025 Vote Micaiah. Happy Halloween!</p>
+        </div>
+    </footer>
+
+</body>
+</html>
